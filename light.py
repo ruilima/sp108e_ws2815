@@ -1,4 +1,6 @@
 """Light platform for SP108E WS2815."""
+from functools import partial
+
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -95,10 +97,14 @@ class SP108ELight(CoordinatorEntity, LightEntity):
 
     async def async_turn_on(self, **kwargs):
         """Turn the light on."""
-        await self.hass.async_add_executor_job(self._light.turn_on, **kwargs)
+        await self.hass.async_add_executor_job(
+            partial(self._light.turn_on, **kwargs)
+        )
         await self.coordinator.async_request_refresh()
 
     async def async_turn_off(self, **kwargs):
         """Turn the light off."""
-        await self.hass.async_add_executor_job(self._light.turn_off, **kwargs)
+        await self.hass.async_add_executor_job(
+            partial(self._light.turn_off, **kwargs)
+        )
         await self.coordinator.async_request_refresh()
